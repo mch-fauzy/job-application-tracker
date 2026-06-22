@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/app/**/{page,layout,route,providers}.tsx", "src/app/**/route.ts"],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignore": ["src/shared/lib/query-client/query-client.ts"],
+  "ignoreDependencies": [
+    "@dnd-kit/core",
+    "@dnd-kit/sortable",
+    "@dnd-kit/utilities",
+    "@hono/zod-validator",
+    "@hookform/resolvers",
+    "@tanstack/react-query",
+    "hono",
+    "next-themes",
+    "react-hook-form",
+    "@testing-library/react",
+    "tsx",
+    "tailwindcss"
+  ]
+}
