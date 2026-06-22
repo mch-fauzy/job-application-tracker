@@ -12,4 +12,6 @@ export const ErrorMessageConstant = {
   DataEntityNotFound: (name: string) => `${name} not found`,
   ValidationError: () => 'Validation Error',
   FieldRequiredWithName: (name: string) => `${name} is required`,
+  ResourceNotFound: () => 'Not Found',
+  InternalServerError: () => 'Internal Server Error',
 } as const;

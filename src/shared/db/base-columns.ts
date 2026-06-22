@@ -27,16 +27,10 @@ const updatedColumns = {
   updatedBy: text('updated_by'), // actor, null until auth
 };
 
-/**
- * Full base set spread into each entity table.
- * @public
- */
+// Full base set spread into each entity table.
 export const baseColumns = { ...idColumn, ...createdColumns, ...updatedColumns };
 
-/**
- * Columns spread only into tables that soft-delete.
- * @public
- */
+// Columns spread only into tables that soft-delete.
 export const softDelete = {
   deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'date' }),
   deletedBy: text('deleted_by'), // actor, null until auth

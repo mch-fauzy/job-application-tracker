@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* Tell the browser the page supports both themes so native UI (scrollbars, form
+     controls, inputs) adapts to the user's preference. */
+  color-scheme: light dark;
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -22,5 +25,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }

@@ -17,10 +17,7 @@ export interface PaginatedData<T> {
   meta: CursorMeta;
 }
 
-/**
- * Error envelope shape.
- * @public
- */
+// Error envelope shape.
 export interface ApiError {
   message: string;
   error?: string | null;

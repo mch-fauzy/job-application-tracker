@@ -13,5 +13,7 @@ describe('message constants', () => {
     expect(ErrorMessageConstant.DataEntityNotFound('Application')).toBe('Application not found');
     expect(ErrorMessageConstant.ValidationError()).toBe('Validation Error');
     expect(ErrorMessageConstant.FieldRequiredWithName('Company')).toBe('Company is required');
+    expect(ErrorMessageConstant.ResourceNotFound()).toBe('Not Found');
+    expect(ErrorMessageConstant.InternalServerError()).toBe('Internal Server Error');
   });
 });

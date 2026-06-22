@@ -4,7 +4,7 @@ import type { DbTransaction } from '@/shared/lib/db/db';
 
 // Cross-cutting audit writer. Every feature service calls this inside its own
 // transaction so the entity mutation and its audit row commit together.
-export interface RecordAuditParams {
+interface RecordAuditParams {
   entityType: string;
   entityId: string;
   action: 'created' | 'updated' | 'deleted';

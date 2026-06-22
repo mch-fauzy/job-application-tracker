@@ -10,8 +10,8 @@
     "test": "vitest run --project unit",
     "test:integration": "vitest run --project integration",
     "test:watch": "vitest --project unit",
-    "db:generate": "drizzle-kit generate",
-    "db:generate:custom": "drizzle-kit generate --custom",
+    "db:generate": "node scripts/db-generate.mjs",
+    "db:generate:custom": "node scripts/db-generate.mjs --custom",
     "db:migrate": "drizzle-kit migrate",
     "knip": "knip",
     "prepare": "husky"
@@ -51,6 +51,7 @@
     "eslint-config-next": "16.2.9",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-boundaries": "^6.0.2",
+    "eslint-plugin-project-structure": "^3.14.3",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "knip": "^6.17.2",
