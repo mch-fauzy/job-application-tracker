@@ -20,16 +20,18 @@ vi.mock('sonner', () => {
 // by resolveDragMove's own unit test.
 // Captured drag handlers so a test can drive the board's onDragStart/onDragEnd directly
 // (jsdom cannot simulate a real pointer drag).
-const dnd: { onDragStart?: (e: unknown) => void; onDragEnd?: (e: unknown) => void } = {};
+const dnd: { id?: string; onDragStart?: (e: unknown) => void; onDragEnd?: (e: unknown) => void } = {};
 vi.mock('@dnd-kit/core', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@dnd-kit/core')>();
   return {
     ...actual,
-    DndContext: ({ children, onDragStart, onDragEnd }: {
+    DndContext: ({ children, id, onDragStart, onDragEnd }: {
       children: React.ReactNode;
+      id?: string;
       onDragStart?: (e: unknown) => void;
       onDragEnd?: (e: unknown) => void;
     }) => {
+      dnd.id = id;
       dnd.onDragStart = onDragStart;
       dnd.onDragEnd = onDragEnd;
       return <div data-testid="dnd-context">{children}</div>;
@@ -101,6 +103,13 @@ describe('ApplicationBoard', () => {
   it('renders the DndContext wrapper', () => {
     render(<ApplicationBoard />, { wrapper: makeWrapper() });
     expect(screen.getByTestId('dnd-context')).toBeInTheDocument();
+  });
+
+  // A stable id keeps dnd-kit's aria-describedby deterministic, so server and client render the
+  // same value and there is no hydration mismatch (dnd-kit otherwise uses a drifting module counter).
+  it('passes a stable id to DndContext to avoid an SSR hydration mismatch', () => {
+    render(<ApplicationBoard />, { wrapper: makeWrapper() });
+    expect(dnd.id).toBe('application-board');
   });
 
   it('opens the create dialog when New Application is clicked', async () => {

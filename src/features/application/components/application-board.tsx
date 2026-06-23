@@ -96,6 +96,10 @@ export function ApplicationBoard() {
 
       <ApplicationActionsProvider actions={actions}>
         <DndContext
+          // Stable id so dnd-kit's aria-describedby is deterministic across server and client.
+          // Without it dnd-kit falls back to a module counter that drifts on the long-lived
+          // server, causing a hydration mismatch on the drag handle.
+          id="application-board"
           sensors={sensors}
           collisionDetection={boardCollisionDetection}
           measuring={{ droppable: { strategy: MeasuringStrategy.WhileDragging } }}
