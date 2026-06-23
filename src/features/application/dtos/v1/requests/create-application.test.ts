@@ -41,6 +41,12 @@ describe('createApplicationSchema', () => {
     expect(result.jobUrl).toBe('https://acme.com/jobs');
   });
 
+  it('rejects a non-http(s) jobUrl scheme (XSS guard)', () => {
+    for (const jobUrl of ['javascript:alert(1)', 'data:text/html,<script>1</script>', 'ftp://acme.com']) {
+      expect(() => createApplicationSchema.parse({ company: 'Acme', role: 'Eng', jobUrl })).toThrow();
+    }
+  });
+
   it('rejects an unknown status', () => {
     expect(() =>
       createApplicationSchema.parse({ company: 'Acme', role: 'Eng', status: 'pending' })

@@ -28,6 +28,10 @@ describe('updateApplicationSchema', () => {
     expect(() => updateApplicationSchema.parse({ jobUrl: 'bad' })).toThrow();
   });
 
+  it('rejects a non-http(s) jobUrl scheme (XSS guard)', () => {
+    expect(() => updateApplicationSchema.parse({ jobUrl: 'javascript:alert(1)' })).toThrow();
+  });
+
   it('rejects an unknown status', () => {
     expect(() => updateApplicationSchema.parse({ status: 'ghost' })).toThrow();
   });

@@ -5,7 +5,9 @@ import { applicationStatusSchema } from '@/features/application/constants/status
 const updateApplicationBase = z.object({
   company: z.string().min(1).max(200).optional(),
   role: z.string().min(1).max(200).optional(),
-  jobUrl: z.url().optional().nullable(),
+  // Restrict to http(s): bare z.url() also accepts javascript: and data:, which would later land
+  // in an href as an XSS vector. Reject other schemes at the boundary so they can never be stored.
+  jobUrl: z.url({ protocol: /^https?$/ }).optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
   status: applicationStatusSchema.optional(),
 });
