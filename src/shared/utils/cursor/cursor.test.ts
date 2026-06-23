@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encodeCursor, decodeCursor } from './cursor';
+import { encodeCursor, decodeCursor, isDecodableCursor } from './cursor';
 
 describe('cursor codec', () => {
   const ts = new Date('2026-03-15T09:30:00.000Z');
@@ -41,5 +41,10 @@ describe('cursor codec', () => {
   it('throws when the id part is empty', () => {
     const bad = Buffer.from('2026-01-01T00:00:00.000Z|').toString('base64url');
     expect(() => decodeCursor(bad)).toThrow('Invalid cursor');
+  });
+
+  it('isDecodableCursor returns true for a valid cursor and false for a malformed one', () => {
+    expect(isDecodableCursor(encodeCursor({ ts, id }))).toBe(true);
+    expect(isDecodableCursor('not-a-valid-cursor')).toBe(false);
   });
 });

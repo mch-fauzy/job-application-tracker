@@ -1,15 +1,6 @@
 import { z } from 'zod';
 import { applicationStatusSchema } from '@/features/application/constants/status';
-import { decodeCursor } from '@/shared/utils/cursor/cursor';
-
-function isDecodableCursor(value: string): boolean {
-  try {
-    decodeCursor(value);
-    return true;
-  } catch {
-    return false;
-  }
-}
+import { isDecodableCursor } from '@/shared/utils/cursor/cursor';
 
 // List query for one active column (status) OR the archived group (archived) - mutually
 // exclusive. limit defaults to 20 and is clamped to 50. archived uses stringbool so

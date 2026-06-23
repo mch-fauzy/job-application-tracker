@@ -16,3 +16,10 @@ export const db = drizzle({ client: pool });
 
 // The interactive-transaction handle passed to repositories and recordAudit.
 export type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+// Selects the caller's transaction when a repository runs inside one, or the pool otherwise.
+// Repositories take an optional tx so a service can compose several writes in one transaction.
+type DbConn = DbTransaction | typeof db;
+export function conn(tx?: DbTransaction): DbConn {
+  return tx ?? db;
+}

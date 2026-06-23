@@ -1,13 +1,15 @@
 import 'server-only';
 import { auditLog } from '@/shared/db/audit-log';
 import type { DbTransaction } from '@/shared/lib/db/db';
+import type { AuditAction } from '@/shared/constants/audit-action';
+import type { EntityType } from '@/shared/constants/entity-type';
 
 // Cross-cutting audit writer. Every feature service calls this inside its own
 // transaction so the entity mutation and its audit row commit together.
 interface RecordAuditParams {
-  entityType: string;
+  entityType: EntityType;
   entityId: string;
-  action: 'created' | 'updated' | 'deleted';
+  action: AuditAction;
   oldData?: unknown;
   newData?: unknown;
   diff?: unknown;

@@ -24,3 +24,15 @@ export function decodeCursor(cursor: string): { ts: Date; id: string } {
 
   return { ts, id };
 }
+
+// Boundary guard for request DTOs: true when the cursor decodes, false otherwise. Lets a
+// schema reject a malformed cursor at the API boundary (422) instead of letting it throw
+// deeper in the repository (500).
+export function isDecodableCursor(value: string): boolean {
+  try {
+    decodeCursor(value);
+    return true;
+  } catch {
+    return false;
+  }
+}

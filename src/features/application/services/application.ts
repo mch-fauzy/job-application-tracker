@@ -12,6 +12,8 @@ import type { UpdateApplicationRequest } from '@/features/application/dtos/v1/re
 import type { ListApplicationsQuery } from '@/features/application/dtos/v1/requests/list-applications-query';
 import { diffOf } from '@/features/application/utils/diff/diff';
 import { APPLICATION_STATUS } from '@/features/application/constants/status';
+import { ENTITY_TYPE } from '@/shared/constants/entity-type';
+import { AUDIT_ACTION } from '@/shared/constants/audit-action';
 
 function notFound(): never {
   throw new HTTPException(404, {
@@ -34,9 +36,9 @@ export const applicationService = {
         tx,
       );
       await recordAudit(tx, {
-        entityType: 'application',
+        entityType: ENTITY_TYPE.APPLICATION,
         entityId: created.id,
-        action: 'created',
+        action: AUDIT_ACTION.CREATED,
         newData: created,
       });
       return created;
@@ -79,9 +81,9 @@ export const applicationService = {
 
       const after = await applicationRepo.update(id, patch, tx);
       await recordAudit(tx, {
-        entityType: 'application',
+        entityType: ENTITY_TYPE.APPLICATION,
         entityId: id,
-        action: 'updated',
+        action: AUDIT_ACTION.UPDATED,
         oldData: before,
         newData: after,
         diff: changed,
@@ -96,9 +98,9 @@ export const applicationService = {
       if (!before) notFound();
       const deleted = await applicationRepo.softDelete(id, actor, tx);
       await recordAudit(tx, {
-        entityType: 'application',
+        entityType: ENTITY_TYPE.APPLICATION,
         entityId: id,
-        action: 'deleted',
+        action: AUDIT_ACTION.DELETED,
         oldData: before,
         newData: null,
       });

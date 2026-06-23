@@ -1,18 +1,12 @@
 import 'server-only';
 import { and, desc, eq, inArray, isNull, lt, or } from 'drizzle-orm';
-import { db } from '@/shared/lib/db/db';
+import { conn } from '@/shared/lib/db/db';
 import type { DbTransaction } from '@/shared/lib/db/db';
 import { applications } from '@/features/application/db/schema';
 import { TERMINAL_STATUSES, type ApplicationStatus } from '@/features/application/constants/status';
 import { encodeCursor, decodeCursor } from '@/shared/utils/cursor/cursor';
 
 type AppRow = typeof applications.$inferSelect;
-type Conn = DbTransaction | typeof db;
-
-// Run against the passed transaction, or the pool when none is given.
-function conn(tx?: DbTransaction): Conn {
-  return tx ?? db;
-}
 
 export const applicationRepo = {
   async findById(id: string, tx?: DbTransaction): Promise<AppRow | undefined> {
