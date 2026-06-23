@@ -28,24 +28,26 @@ interface AuditTimelineProps {
   applicationId: string;
 }
 
-// Newest-first audit timeline that flows in the page scroll. Older events auto-load as the
-// sentinel scrolls into the viewport (same keyset infinite-scroll as the board columns), so a
-// long history stays usable.
 export function AuditTimeline({ applicationId }: AuditTimelineProps) {
   const { data, isLoading, isError, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useTimeline(applicationId);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // The timeline flows in the page scroll (no bounded panel), so the observer roots at the
-  // viewport - older events load as the sentinel scrolls into view.
-  useInfiniteScroll({ sentinelRef, hasNextPage, isFetchingNextPage, fetchNextPage });
+  // The panel scrolls internally, so the observer roots to that container.
+  useInfiniteScroll({ scrollRef, sentinelRef, hasNextPage, isFetchingNextPage, fetchNextPage });
 
   const events = data?.pages.flatMap((page) => page.items) ?? [];
 
   return (
     <div className="space-y-3">
       <h2 className="text-lg font-semibold">History</h2>
-      <div role="log" aria-busy={isLoading} className="space-y-3">
+      <div
+        ref={scrollRef}
+        role="log"
+        aria-busy={isLoading}
+        className="max-h-96 space-y-3 overflow-y-auto pr-1"
+      >
         {isLoading
           ? [0, 1, 2].map((i) => <div key={i} className="h-10 animate-pulse rounded-md bg-muted" />)
           : null}
