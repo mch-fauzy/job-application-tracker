@@ -18,9 +18,17 @@ export const folderStructureConfig = createFolderStructure({
   structure: [
     { name: '*' }, // any root-level file (package.json, eslint.config.mjs, ...)
     { name: 'src', ruleId: 'src_root' },
+    { name: 'scripts', ruleId: 'scripts_root' }, // CLI/build scripts (seed, db-generate)
     { name: '(?!src$).*', children: [] }, // any other root folder (docs, node_modules, ...)
   ],
   rules: {
+    // Standalone CLI/build scripts: flat kebab-case files (.ts/.mjs) plus colocated tests.
+    scripts_root: {
+      children: [
+        { name: '{kebab-case}.(ts|mjs)' },
+        { name: '{kebab-case}.test.(ts|tsx)' },
+      ],
+    },
     src_root: {
       children: [
         { name: 'app', children: [] }, // Next.js App Router - framework conventions, unconstrained

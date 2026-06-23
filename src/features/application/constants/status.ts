@@ -34,6 +34,12 @@ export const TERMINAL_STATUSES = [
 // The terminal-status union, used by the card menu and board terminal actions.
 export type TerminalStatus = (typeof TERMINAL_STATUSES)[number];
 
+// True when a status is terminal (archived). some() (not includes) keeps the comparison typed
+// against the wider ApplicationStatus union without an `as` cast on the narrow tuple.
+export function isTerminalStatus(status: ApplicationStatus): boolean {
+  return TERMINAL_STATUSES.some((terminal) => terminal === status);
+}
+
 // Boundary guard shared by the request DTOs and the Drizzle status default. z.enum takes the
 // const object directly in Zod 4, replacing the deprecated z.nativeEnum.
 export const applicationStatusSchema = z.enum(APPLICATION_STATUS);

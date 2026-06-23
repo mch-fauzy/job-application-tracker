@@ -100,6 +100,35 @@ describe('EditApplicationDialog', () => {
     expect(body.notes).toBeNull();
   });
 
+  it('re-seeds the form with the latest application when reopened (after a save)', () => {
+    const updated = { ...existingApp, role: 'Senior Dev', updatedAt: '2026-02-01T00:00:00.000Z' };
+    const { rerender } = render(
+      <EditApplicationDialog open onOpenChange={() => undefined} application={existingApp} />,
+      { wrapper: makeWrapper() },
+    );
+    expect(screen.getByLabelText(/role/i)).toHaveValue('Dev');
+
+    // Detail page keeps the dialog mounted: close, then reopen with the refetched application.
+    rerender(<EditApplicationDialog open={false} onOpenChange={() => undefined} application={updated} />);
+    rerender(<EditApplicationDialog open onOpenChange={() => undefined} application={updated} />);
+
+    expect(screen.getByLabelText(/role/i)).toHaveValue('Senior Dev');
+  });
+
+  it('discards unsaved edits when reopened after a cancel', () => {
+    const { rerender } = render(
+      <EditApplicationDialog open onOpenChange={() => undefined} application={existingApp} />,
+      { wrapper: makeWrapper() },
+    );
+    fireEvent.change(screen.getByLabelText(/role/i), { target: { value: 'Temp edit' } });
+    expect(screen.getByLabelText(/role/i)).toHaveValue('Temp edit');
+
+    rerender(<EditApplicationDialog open={false} onOpenChange={() => undefined} application={existingApp} />);
+    rerender(<EditApplicationDialog open onOpenChange={() => undefined} application={existingApp} />);
+
+    expect(screen.getByLabelText(/role/i)).toHaveValue('Dev');
+  });
+
   it('closes without submitting when Cancel is clicked', () => {
     const onOpenChange = vi.fn();
     const fetchMock = vi.fn();

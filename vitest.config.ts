@@ -17,6 +17,8 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
       provider: 'v8',
+      // text prints the summary table - html writes a browsable report to coverage/ (gitignored).
+      reporter: ['text', 'html'],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
       exclude: [
         ...coverageConfigDefaults.exclude,
@@ -36,7 +38,8 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'node', // client tests opt into jsdom per-file
-          include: ['src/**/*.test.{ts,tsx}'],
+          // scripts/ holds the seed CLI - its pure data builder is unit-tested here too.
+          include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.{ts,tsx}'],
           exclude: ['**/*.integration.test.{ts,tsx}', '**/node_modules/**'],
         },
       },

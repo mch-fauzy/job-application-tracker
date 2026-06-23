@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { clientPaginatedResponseSchema } from '@/shared/schemas/client-response';
 import { auditActionSchema, type AuditAction } from '@/shared/constants/audit-action';
 
 // No server-only: the schema is plain Zod and the mapper only uses Date.toISOString(), so
@@ -15,6 +16,10 @@ export const auditEventResponseSchema = z.object({
 });
 
 export type AuditEventResponse = z.infer<typeof auditEventResponseSchema>;
+
+// Client parse target: the HTTP envelope around a keyset page of timeline events. The hook
+// parses this then reads .data. RSC prefetch calls the service directly and gets the bare page.
+export const auditPageEnvelopeSchema = clientPaginatedResponseSchema(auditEventResponseSchema);
 
 // Structural row shape (only the mapped columns), so this client-safe file never imports the
 // server-only auditLog table. A real auditLog row is assignable to it.

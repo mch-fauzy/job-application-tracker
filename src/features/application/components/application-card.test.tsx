@@ -49,6 +49,14 @@ describe('ApplicationCard', () => {
     expect(screen.getByText('saved')).toBeInTheDocument();
   });
 
+  it('links the card to its detail + timeline page', () => {
+    renderCard();
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      `/applications/${mockApp.id}`,
+    );
+  });
+
   it('calls edit with the application when Edit is selected', async () => {
     const user = userEvent.setup();
     const { edit } = renderCard();

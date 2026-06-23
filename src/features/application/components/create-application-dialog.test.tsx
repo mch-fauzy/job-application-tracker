@@ -39,6 +39,21 @@ describe('CreateApplicationDialog', () => {
     expect(screen.getByLabelText(/role/i)).toBeInTheDocument();
   });
 
+  it('clears unsaved input when reopened after a cancel', () => {
+    const { rerender } = render(
+      <CreateApplicationDialog open onOpenChange={() => undefined} />,
+      { wrapper: makeWrapper() },
+    );
+    fireEvent.change(screen.getByLabelText(/company/i), { target: { value: 'Typed but not saved' } });
+    expect(screen.getByLabelText(/company/i)).toHaveValue('Typed but not saved');
+
+    // The dialog is kept mounted by the board: close, then reopen - it must start blank.
+    rerender(<CreateApplicationDialog open={false} onOpenChange={() => undefined} />);
+    rerender(<CreateApplicationDialog open onOpenChange={() => undefined} />);
+
+    expect(screen.getByLabelText(/company/i)).toHaveValue('');
+  });
+
   it('blocks submission and does not POST when required fields are empty', async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
@@ -114,7 +129,7 @@ describe('CreateApplicationDialog', () => {
     fireEvent.change(screen.getByLabelText(/role/i), { target: { value: 'Engineer' } });
     fireEvent.click(screen.getByRole('button', { name: /^create$/i }));
     expect(await screen.findByRole('button', { name: /creating/i })).toBeInTheDocument();
-    // Cancel is disabled while the request is in flight.
-    expect(screen.getByRole('button', { name: /cancel/i })).toBeDisabled();
+    // Cancel stays enabled during the request so the user can always escape (NN/g user control).
+    expect(screen.getByRole('button', { name: /cancel/i })).toBeEnabled();
   });
 });

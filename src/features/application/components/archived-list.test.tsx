@@ -68,6 +68,15 @@ describe('ArchivedList', () => {
     expect(screen.getByText('Designer')).toBeInTheDocument();
   });
 
+  it('links each archived card to its detail + timeline page', async () => {
+    renderList();
+    await screen.findByText('WidgetCo');
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      `/applications/${mockRejected.id}`,
+    );
+  });
+
   it('offers a Reopen submenu', async () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 });
     renderList();

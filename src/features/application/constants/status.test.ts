@@ -4,6 +4,7 @@ import {
   ACTIVE_STATUSES,
   TERMINAL_STATUSES,
   applicationStatusSchema,
+  isTerminalStatus,
 } from './status';
 
 describe('status constants', () => {
@@ -34,6 +35,11 @@ describe('status constants', () => {
 
   it('the create default (APPLICATION_STATUS.SAVED) is an active status', () => {
     expect(ACTIVE_STATUSES).toContain(APPLICATION_STATUS.SAVED);
+  });
+
+  it('isTerminalStatus is true for terminal statuses and false for active ones', () => {
+    for (const status of TERMINAL_STATUSES) expect(isTerminalStatus(status)).toBe(true);
+    for (const status of ACTIVE_STATUSES) expect(isTerminalStatus(status)).toBe(false);
   });
 
   it('ACTIVE + TERMINAL cover all statuses', () => {

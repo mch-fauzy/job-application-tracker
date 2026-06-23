@@ -87,7 +87,10 @@ describe('useCreateApplication', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const mutation = queryClient.getMutationCache().getAll()[0];
-    expect(mutation.options.meta?.invalidates).toEqual([queryKeys.applications.all]);
+    expect(mutation.options.meta?.invalidates).toEqual([
+      queryKeys.applications.all,
+      queryKeys.timeline.all,
+    ]);
   });
 
   it('falls back to a generic message when the server returns no message', async () => {
@@ -125,6 +128,25 @@ describe('useUpdateApplication', () => {
     expect(url).toBe(`/api/v1/applications/${mockApp.id}`);
     expect(init.method).toBe('PATCH');
     expect(result.current.data?.company).toBe('Acme2');
+  });
+
+  it('invalidates both applications and the timeline so the audit history refreshes', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({ ok: true, json: async () => ({ message: 'updated', data: mockApp }) }),
+    );
+    const { queryClient, wrapper } = makeWrapper();
+    const { result } = renderHook(() => useUpdateApplication(), { wrapper });
+    act(() => {
+      result.current.mutate({ id: mockApp.id, data: { status: 'applied' } });
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    const mutation = queryClient.getMutationCache().getAll()[0];
+    expect(mutation.options.meta?.invalidates).toEqual([
+      queryKeys.applications.all,
+      queryKeys.timeline.all,
+    ]);
   });
 
   it('surfaces the server message via toast on error', async () => {

@@ -8,6 +8,7 @@ export const queryKeys = {
     detail: (id: string) => ['applications', 'detail', id] as const,
   },
   timeline: {
+    all: ['timeline'] as const,
     detail: (id: string) => ['timeline', 'detail', id] as const,
   },
 } as const;

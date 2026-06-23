@@ -95,4 +95,27 @@
       scroll-behavior: auto !important;
     }
   }
+  /* Remove the 300ms double-tap delay on tap targets (Vercel Web Interface Guidelines). Pinch
+     and pan still work. The drag handle opts back out with the touch-none utility, which sits in
+     a later layer and so wins. */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  label,
+  summary,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+  /* Balance heading line lengths so a title never leaves one short orphan word. The browser
+     ignores this past ~6 lines, so it is safe on long headings. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
 }

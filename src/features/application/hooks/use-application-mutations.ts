@@ -33,13 +33,14 @@ async function sendApplication(
   return applicationEnvelopeSchema.parse(json).data;
 }
 
-// Tagging meta.invalidates with applications.all lets the global MutationCache
-// refetch every applications query (all columns + archived) after the write.
+// Tagging meta.invalidates lets the global MutationCache refetch the matching queries after the
+// write: every applications query (all columns + archived) AND the audit timeline, since each
+// mutation appends an audit row - without timeline.all the open history would go stale.
 export function useCreateApplication() {
   return useMutation<ApplicationResponse, Error, CreateApplicationRequest>({
     mutationFn: (data) => sendApplication('/api/v1/applications', 'POST', data),
     onError: (err) => toast.error(err.message),
-    meta: { invalidates: [queryKeys.applications.all] },
+    meta: { invalidates: [queryKeys.applications.all, queryKeys.timeline.all] },
   });
 }
 
@@ -47,7 +48,7 @@ export function useUpdateApplication() {
   return useMutation<ApplicationResponse, Error, { id: string; data: UpdateApplicationRequest }>({
     mutationFn: ({ id, data }) => sendApplication(`/api/v1/applications/${id}`, 'PATCH', data),
     onError: (err) => toast.error(err.message),
-    meta: { invalidates: [queryKeys.applications.all] },
+    meta: { invalidates: [queryKeys.applications.all, queryKeys.timeline.all] },
   });
 }
 
