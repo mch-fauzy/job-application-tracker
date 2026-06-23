@@ -31,6 +31,9 @@ export const TERMINAL_STATUSES = [
   APPLICATION_STATUS.WITHDRAWN,
 ] as const;
 
+// The terminal-status union, used by the card menu and board terminal actions.
+export type TerminalStatus = (typeof TERMINAL_STATUSES)[number];
+
 // Boundary guard shared by the request DTOs and the Drizzle status default. z.enum takes the
 // const object directly in Zod 4, replacing the deprecated z.nativeEnum.
 export const applicationStatusSchema = z.enum(APPLICATION_STATUS);

@@ -2,17 +2,11 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": ["src/app/**/{page,layout,route,providers}.tsx", "src/app/**/route.ts"],
   "project": ["src/**/*.{ts,tsx}"],
-  "ignore": ["src/shared/lib/query-client/query-client.ts"],
+  "ignore": ["src/shared/components/ui/**"],
   "ignoreDependencies": [
-    "@dnd-kit/core",
-    "@dnd-kit/sortable",
     "@dnd-kit/utilities",
-    "@hookform/resolvers",
-    "@tanstack/react-query",
-    "next-themes",
-    "react-hook-form",
-    "@testing-library/react",
     "tsx",
-    "tailwindcss"
+    "tailwindcss",
+    "tw-animate-css"
   ]
 }

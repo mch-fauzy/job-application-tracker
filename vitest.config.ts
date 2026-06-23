@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, coverageConfigDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 
@@ -15,7 +15,19 @@ export default defineConfig({
   test: {
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
-    coverage: { provider: 'v8', thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 } },
+    coverage: {
+      provider: 'v8',
+      thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
+      exclude: [
+        ...coverageConfigDefaults.exclude,
+        // Generated shadcn/ui primitives (knip-ignored too) - not our logic.
+        'src/shared/components/ui/**',
+        // RSC pages, app shell, and route loading skeletons are verified by build, not unit-tested.
+        'src/app/layout.tsx',
+        'src/app/**/page.tsx',
+        'src/app/**/loading.tsx',
+      ],
+    },
     // Two projects: `unit` is hermetic (used by the pre-commit hook); `integration`
     // hits the real DB. Run with `--project unit` / `--project integration`.
     projects: [

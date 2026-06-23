@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import {
+  clientResponseSchema,
+  clientPaginatedResponseSchema,
+} from '@/shared/schemas/client-response';
+import {
   applicationStatusSchema,
   type ApplicationStatus,
 } from '@/features/application/constants/status';
@@ -14,11 +18,16 @@ export const applicationResponseSchema = z.object({
   status: applicationStatusSchema,
   jobUrl: z.url().nullable(),
   notes: z.string().nullable(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+  createdAt: z.iso.datetime({ precision: 3 }),
+  updatedAt: z.iso.datetime({ precision: 3 }),
 });
 
 export type ApplicationResponse = z.infer<typeof applicationResponseSchema>;
+
+// Client parse targets: the HTTP envelope around a single application and around a keyset page.
+// Hooks parse these then read .data. RSC calls the service directly and gets the bare DTO.
+export const applicationEnvelopeSchema = clientResponseSchema(applicationResponseSchema);
+export const applicationPageEnvelopeSchema = clientPaginatedResponseSchema(applicationResponseSchema);
 
 // Maps a Drizzle row to the response shape: dates to ISO strings, internal columns dropped.
 export function mapApplication(row: {

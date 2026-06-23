@@ -29,10 +29,7 @@ function makeQueryClient() {
 
 let browserClient: QueryClient | undefined;
 
-/**
- * Builds the request-scoped (server) or singleton (browser) QueryClient.
- * @public
- */
+// Builds the request-scoped (server) or singleton (browser) QueryClient.
 export function getQueryClient() {
   if (isServer) return makeQueryClient(); // fresh per request (RSC prefetch)
   return (browserClient ??= makeQueryClient()); // singleton in the browser
