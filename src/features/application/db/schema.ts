@@ -16,8 +16,9 @@ export const applications = pgTable('applications', {
 }, (t) => [
   // Board columns + archived group lookups: filter by status, order by recency.
   index('applications_status_updated_at_idx').on(t.status, t.updatedAt.desc()),
-  // Keyset pagination hot path - partial index skips soft-deleted rows.
+  // Keyset pagination hot path - partial index skips soft-deleted rows. id is DESC to match the
+  // (updatedAt, id) DESC cursor order, so the tie-break needs no extra sort.
   index('applications_active_updated_at_id_idx')
-    .on(t.updatedAt.desc(), t.id)
+    .on(t.updatedAt.desc(), t.id.desc())
     .where(sql`${t.deletedAt} IS NULL`),
 ]);
